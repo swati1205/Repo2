@@ -1,0 +1,41 @@
+---
+#  - name: Check if MySQL already Installed
+#    win_stat:
+#      path: '{{ ansible_env.ProgramFiles }}\MySQL\MySQL Server 5.5\bin\mysqld.exe'
+#    register: MySQLExists
+    
+  - name: Check if MySQL already Installed
+    script: scripts/InstallCheck.ps1 "*MySQL Server*"
+    register: MySQLExists
+    changed_when: false
+    
+  - name: Create Staging directory for downloading MySQL Server
+    win_file: path="{{ DOWNLOAD_DIR }}\mysql" state=directory
+    when: MySQLExists.stdout == ""    
+    
+  - name: Download MySQL
+    win_get_url:
+      url: '{{ DOWNLOAD_URL }}/{{ MYSQL_MSI_FILE }}'
+      dest: '{{ DOWNLOAD_DIR }}\mysql\{{ MYSQL_MSI_FILE }}'
+    when: MySQLExists.stdout == ""
+    
+  - name: Install MySQL 5
+    script: scripts/MySQL_Install.ps1 '{{ DOWNLOAD_DIR }}\mysql\{{ MYSQL_MSI_FILE }}' '{{ DOWNLOAD_DIR }}\mysql\MySQL_Install.log'
+    register: MySQLInstall
+    when: MySQLExists.stdout == ""
+
+  #- debug: msg="MySQL Install status {{ MySQLInstall }}"
+  
+  - name: Configure MySQL Instance
+    script: scripts/MySQL_Configure.ps1
+    ignore_errors: True
+    when: MySQLInstall.skipped is not defined
+    
+  - name: Add MySQL to System PATH
+    script: scripts/AddPath.ps1 "%ProgramFiles%\MySQL\MySQL Server 5.5\bin" Machine
+    when: MySQLInstall.skipped is not defined
+    
+  - name: Create Sample PETCLINIC DB
+    raw: cmd.exe /c mysql --user=root --password=mysql -e "CREATE DATABASE PETCLINIC;"
+    ignore_errors: True
+    when: MySQLInstall.skipped is not defined

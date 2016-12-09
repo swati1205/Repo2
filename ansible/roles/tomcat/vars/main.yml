@@ -1,0 +1,4 @@
+---
+  TOMCAT_ZIP_FILE: apache-tomcat-7.0.62-windows-x64.zip
+  TOMCAT_VERSION: 7.0.62
+  TOMCAT_MYSQL_CONNECTOR: mysql-connector-java-5.1.40-bin.jar

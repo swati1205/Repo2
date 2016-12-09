@@ -1,0 +1,7 @@
+---
+- hosts: all
+  sudo: yes  
+  tasks:
+    - name: add user
+      #user: name=testuser1 password=test
+      action: user name=dneha password=sneha  

@@ -1,0 +1,5 @@
+---
+users:
+ mal:
+   password: test
+   state: present

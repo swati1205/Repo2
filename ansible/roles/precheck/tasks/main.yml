@@ -1,0 +1,14 @@
+---
+  - name: Check for single host
+    fail: msg="Single host check failed, Please provide your host in Limit parameter of the Job Template"
+    when: "{{ play_hosts|length }} != 1"
+  
+  - debug: msg='Singe Host Check Passed!, I got executed!'
+ # - name: run ipconfig
+  #  raw: ipconfig
+   # register: ipconfig
+  #- debug: var=ipconfig
+  - name: win ping
+    win_ping :
+ # - name: running powershell in my machine
+  #  script: helloworld.ps1

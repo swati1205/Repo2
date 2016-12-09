@@ -1,0 +1,9 @@
+---
+- name: creates a file
+  win_file:
+     path: D:/PSscript/File1.txt
+     state: touch
+- name: creates a directory
+  win_file:
+     path: D:/foo/bar
+     state: directory

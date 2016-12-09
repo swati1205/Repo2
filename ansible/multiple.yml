@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+      - name: Create file
+        file: path=/home/swati/newfile.txt state=touch
+ 
+- hosts: webservers
+  sudo: yes
+  tasks:
+      - name: Create user
+        user: name=mario

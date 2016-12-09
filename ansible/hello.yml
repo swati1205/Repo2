@@ -1,0 +1,10 @@
+---
+- hosts: all
+  serial: 1
+  tasks:
+   # - shell: echo "hello world"
+    - name: Create file
+      file: path=/home/swati/foo.txt state=touch
+- include: copy.yml
+
+

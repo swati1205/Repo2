@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+   # - shell: echo "hello world"
+    - name: Remove file
+    # file: path=/home/swati/ansible/copy.yml state=absent
+      copy: src=/home/swati/ansible/newplay.yml dest=/home/swati/copy1.yml
+
+
+
+

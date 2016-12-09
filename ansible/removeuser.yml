@@ -1,0 +1,8 @@
+
+---
+- hosts: webservers
+  sudo: yes  
+  tasks:
+    - name: remove user
+      user: name=mario generate_ssh_key=yes ssh_key_bits=2048
+

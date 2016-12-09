@@ -1,0 +1,39 @@
+---
+  #- name: Check if JDK 1.7 already present
+  #  win_stat:
+  #    path: '{{ ansible_env.ProgramFiles }}\jdk{{ JAVA_VERSION }}\bin\javac.exe'
+  #  register: JDKExists
+
+  - name: Check if JDK 1.7 already present
+    script: scripts/InstallCheck.ps1 "*Java SE Development Kit 7*"
+    register: JDKExists
+    changed_when: false
+
+  - name: Create Staging directory for downloading JDK
+    win_file: path="{{ DOWNLOAD_DIR }}\java" state=directory
+    when: JDKExists.stdout == ""
+             
+  - name: Download JDK 7
+    win_get_url:
+      url: '{{ DOWNLOAD_URL }}/{{ JAVA_EXE_FILE }}'
+      dest: '{{ DOWNLOAD_DIR }}\java\{{ JAVA_EXE_FILE }}'
+    when: JDKExists.stdout == ""
+    
+  - name: Install JDK 7
+    script: scripts/JDK_Install.ps1 '{{ DOWNLOAD_DIR }}\java\{{ JAVA_EXE_FILE }}' '{{ ansible_env.ProgramFiles }}\java\jdk{{ JAVA_VERSION }}' '{{ DOWNLOAD_DIR }}\java\JDK_Install.log'
+    register: InstallJDKStatus
+    when: JDKExists.stdout == ""
+    
+  #- debug: msg='JDK Install status {{ InstallJDKStatus }}'
+  
+  - name: Set Environment variable JAVA_HOME
+    win_environment:
+      state: present
+      name: JAVA_HOME
+      value: '{{ ansible_env.ProgramFiles }}\java\jdk{{ JAVA_VERSION }}'
+      level: user
+    when: InstallJDKStatus.skipped is not defined
+    
+  - name: Add JDK 7 to System PATH
+    script: scripts/AddPath.ps1 "%JAVA_HOME%\bin" Machine
+    when: InstallJDKStatus.skipped is not defined

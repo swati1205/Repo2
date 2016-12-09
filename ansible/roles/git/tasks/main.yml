@@ -1,0 +1,36 @@
+---
+#  - name: Check if Git Already Installed
+#    win_stat:
+#      path: '{{ ansible_env.ProgramFiles }}\{{ GIT_NAME }}\git-cmd.exe'
+#    register: GitInstallStatus
+    
+  - name: Check if Git Already Installed
+    script: scripts/InstallCheck.ps1 "*Git*"
+    register: GitInstallStatus
+    changed_when: false
+    
+  #- debug: msg='Git Installation status {{ GitInstallStatus }}'
+  
+  - name: Create Staging directory for downloading Git Exe
+    win_file: path="{{ DOWNLOAD_DIR }}\git" state=directory
+    when: GitInstallStatus.stdout == ""
+    
+  - name: Download GIT for Windows 
+    win_get_url:
+      url: '{{ DOWNLOAD_URL }}/{{ GIT_EXE_FILE }}'
+      dest: '{{ DOWNLOAD_DIR }}\git\{{ GIT_EXE_FILE }}'
+      force: no
+      creates: '{{ DOWNLOAD_DIR}}\git'
+    when: GitInstallStatus.stdout == ""
+    
+  #- debug: msg='Ansible facts {{ ansible_env.USERPROFILE }} available in other roles'
+
+  - name: Copy INF for GIT silent installation 
+    win_copy:
+      src: 'files/git.ini'
+      dest: '{{ DOWNLOAD_DIR }}\git\git.ini'
+    when: GitInstallStatus.stdout == ""
+      
+  - name: Install GIT
+    script: scripts/Git_Install.ps1 '{{ DOWNLOAD_DIR }}\git\{{ GIT_EXE_FILE }}' '{{ DOWNLOAD_DIR }}\git\git.ini' '{{ DOWNLOAD_DIR }}\git\Git_Install.log'
+    when: GitInstallStatus.stdout == ""

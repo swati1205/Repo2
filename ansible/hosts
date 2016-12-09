@@ -1,0 +1,12 @@
+[_Development_]
+10.219.193.101
+
+[_Development_:vars]
+ansible_ssh_user='CTS\\514359'
+ansible_ssh_pass='Sept@1205'
+ansible_ssh_port=5986
+ansible_connection=winrm
+ansible_winrm_transport=ntlm
+ansible_winrm_server_cert_validation=ignore
+
+

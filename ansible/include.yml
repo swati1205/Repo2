@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: Create file
+      file: path=/home/swati/new.txt state=touch
+- include: createuser.yml

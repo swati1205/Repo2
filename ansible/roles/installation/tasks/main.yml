@@ -1,0 +1,5 @@
+---
+ - name: install notepadd++
+   #win_msi:
+  #    path: C:\Users\514359\Downloads\npp.7.2.Installer.x64.exe
+   script: script/install.ps1 

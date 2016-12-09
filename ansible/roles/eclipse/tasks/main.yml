@@ -1,0 +1,8 @@
+---
+- name: install eclipse
+   win_unzip:
+    src: C:\Users\514359\Downloads\eclipse-java-mars-2-win32-x86_64.zip
+    dest: D:\eclipse
+#  win_msi:
+ #  path: D:\eclipse\eclipse\eclipsec.exe
+  #  wait: true

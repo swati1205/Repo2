@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+    - name: run test script
+      script: /home/swati/ansible/testscript.ps1

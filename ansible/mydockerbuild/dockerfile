@@ -1,0 +1,8 @@
+app1:
+  build: .
+  dockerfile: mytomcat-dockerfile
+ 
+app2:
+  build: .
+  dockerfile: ubuntu-dockerfile
+ 

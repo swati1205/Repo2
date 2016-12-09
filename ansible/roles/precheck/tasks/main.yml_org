@@ -1,0 +1,6 @@
+---
+  - name: Check for single host
+    fail: msg="Single host check failed, Please provide your host in Limit parameter of the Job Template"
+    when: "{{ play_hosts|length }} != 1"
+  
+  - debug: msg='Singe Host Check Passed!, I got executed!'

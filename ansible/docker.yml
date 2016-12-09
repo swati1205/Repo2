@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - name: Create a data container
+      docker_container:
+        name: mydata
+        image: tomcat:7.0
+        volumes:
+          - /data
+

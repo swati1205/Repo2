@@ -1,0 +1,31 @@
+---
+  - name: Check if Workspace already exists
+    win_stat:
+      path: '{{ PROJECT_ROOT }}\workspace'
+    register: WorkspaceAlreadyExists
+    changed_when: false
+    
+  - name: Download Eclipse workspace Project settings
+    win_copy:
+      src: 'files/{{ WORKSPACE_FILE }}'
+      dest: '{{ DOWNLOAD_DIR }}\eclipse\{{ WORKSPACE_FILE }}'
+    register: UnzipWorkspace
+    when: WorkspaceAlreadyExists.stat.exists != True
+
+  - name: Unzip Eclipse default workspace to PROJECT ROOT
+    win_unzip:
+      src: '{{ DOWNLOAD_DIR }}\eclipse\{{ WORKSPACE_FILE }}'
+      dest: '{{ PROJECT_ROOT }}'
+      creates: '{{ PROJECT_ROOT }}\workspace'
+    when: UnzipWorkspace.skipped is not defined    
+    
+  - name: Set PROJECT specific workspace preferences in Eclipse UI IDE Preferences
+    template: src={{ item.source }} dest={{ item.dest }}
+    with_items:
+      - { source: 'templates/org.eclipse.jst.server.tomcat.core.prefs.j2', dest: '{{ PROJECT_ROOT }}\workspace\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.jst.server.tomcat.core.prefs' }
+      - { source: 'templates/org.eclipse.wst.server.core.prefs.j2', dest: '{{ PROJECT_ROOT }}\workspace\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.wst.server.core.prefs' }
+      - { source: 'templates/org.eclipse.jdt.launching.prefs.j2', dest: '{{ PROJECT_ROOT }}\workspace\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.jdt.launching.prefs' }
+      - { source: 'templates/install.xml.j2', dest: '{{ PROJECT_ROOT }}\workspace\.metadata\.plugins\org.eclipse.jdt.launching\.install.xml' }
+      - { source: 'templates/libraryInfos.xml.j2', dest: '{{ PROJECT_ROOT }}\workspace\.metadata\.plugins\org.eclipse.jdt.launching\libraryInfos.xml' }
+      - { source: 'templates/Tomcat v7.0 Server at localhost.launch.j2', dest: '"{{ PROJECT_ROOT }}\workspace\.metadata\.plugins\org.eclipse.debug.core\.launch\Tomcat v7.0 Server at localhost.launch"' }
+    when: UnzipWorkspace.skipped is not defined

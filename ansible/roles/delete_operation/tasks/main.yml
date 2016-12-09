@@ -1,0 +1,11 @@
+---
+- name: deletes a file
+  win_file:
+     path: D:/PSscript/File1.txt
+     state: absent
+
+- name: deletes a directory
+  win_file:
+     path: D:/foo
+     state: absent
+

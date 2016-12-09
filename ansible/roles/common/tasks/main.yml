@@ -1,0 +1,24 @@
+---
+  - name: Enable Gather Facts
+    setup:
+    
+  - name: Create Project Root Directory..
+    win_file: path="{{ PROJECT_ROOT }}" state=directory
+      
+  - name: Check if m2 already exists
+    win_stat:
+      path: '{{ ansible_env.USERPROFILE }}\.m2\settings.xml'
+    register: m2SettingsFileStat
+    changed_when: false
+
+  - name: Create m2 directroy if not present
+    win_file:
+      path: '{{ ansible_env.USERPROFILE }}\.m2'
+      state: directory
+    when: m2SettingsFileStat.stat.exists != True
+
+  - name: Copy maven settings
+    win_copy:
+      src: 'files/settings.xml'
+      dest: '{{ ansible_env.USERPROFILE }}\.m2\settings.xml'
+    when: m2SettingsFileStat.stat.exists != True 

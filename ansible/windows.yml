@@ -1,0 +1,11 @@
+---
+- hosts: _Development_
+  gather_facts: false
+
+  roles:
+     - create_file
+  #  - installation
+ #  - delete_operation
+    # - create_opeartion
+  # - eclipse
+   # tomcat  

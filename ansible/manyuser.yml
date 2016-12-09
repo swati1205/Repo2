@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: Add users from host_vars file
+      action: user name={{ item.key }} password={{ item.value.password }} state={{ item.value.state }} update_password=always
+      with_dict: users

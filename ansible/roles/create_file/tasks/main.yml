@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+   # - shell: echo "hello world"
+    - name: Create file
+      file: path=/home/swati/newplay.yml state=touch
+ 
+
+
+
+

@@ -1,0 +1,4 @@
+CombineImage:
+  requires:
+    - my/tomcat
+    - 10.242.138.121:5000/library/ubuntu:14.04
